@@ -13,28 +13,31 @@ script:
 - echo $debian_arm_sha
 - apache_arm_sha=$(get_manifest_sha "treehouses/apache:latest" "arm")
 - echo $apache_arm_sha
-- flag_arm=$(is_base "treehouses/debian@"$debian_arm_sha "treehouses/apache@"$apache_arm_sha )
+- flag_arm=$(is_base "treehouses/debian@"$debian_arm_sha "treehouses/apache@"$apache_arm_sha
+  )
 - echo $flag_arm
 - debian_amd64_sha=$(get_manifest_sha "treehouses/debian:latest" "amd64")
 - echo $debian_amd64_sha
 - apache_amd64_sha=$(get_manifest_sha "treehouses/apache:latest" "amd64")
 - echo $apache_amd64_sha
-- flag_amd64=$(is_base "treehouses/debian@"$debian_amd64_sha "treehouses/apache@"$apache_amd64_sha )
+- flag_amd64=$(is_base "treehouses/debian@"$debian_amd64_sha "treehouses/apache@"$apache_amd64_sha
+  )
 - echo $flag_amd64
 - debian_arm64_sha=$(get_manifest_sha "treehouses/debian:latest" "arm64")
 - echo $debian_arm64_sha
 - apache_arm64_sha=$(get_manifest_sha "treehouses/apache:latest" "arm64")
 - echo $apache_arm64_sha
-- flag_arm64=$(is_base "treehouses/debian@"$debian_arm64_sha "treehouses/apache@"$apache_arm64_sha )
+- flag_arm64=$(is_base "treehouses/debian@"$debian_arm64_sha "treehouses/apache@"$apache_arm64_sha
+  )
 - echo $flag_arm64
-#- version2=$(image_version treehouses/apache:latest)
-#- echo "treehouses version is $version2"
 - echo $DOCKERAPIKEY | docker login -u "sevenseas" --password-stdin
-- docker run --rm --privileged multiarch/qemu-user-static --reset -p yes   # for arm64
-- "./docker-build.sh treehouses/debian:latest arm"      #Dockerfile base image is arm   arch
-- "./docker-build.sh treehouses/debian:latest arm64"    #Dockerfile base image is arm64 arch
-- "./docker-build.sh treehouses/debian:latest amd64"    #Dockerfile base image is amd64 arch
-- flag=$(compare "treehouses/debian@"$debian_arm_sha "treehouses/apache@"$apache_arm_sha "treehouses/debian@"$debian_amd64_sha "treehouses/apache@"$apache_amd64_sha "treehouses/debian@"$debian_arm64_sha "treehouses/apache@"$apache_arm64_sha "treehouses/apache:latest" "treehouses/apache-tags:amd64")
+- docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+- "./docker-build.sh treehouses/debian:latest arm"
+- "./docker-build.sh treehouses/debian:latest arm64"
+- "./docker-build.sh treehouses/debian:latest amd64"
+- flag=$(compare "treehouses/debian@"$debian_arm_sha "treehouses/apache@"$apache_arm_sha
+  "treehouses/debian@"$debian_amd64_sha "treehouses/apache@"$apache_amd64_sha "treehouses/debian@"$debian_arm64_sha
+  "treehouses/apache@"$apache_arm64_sha "treehouses/apache:latest" "treehouses/apache-tags:amd64")
 - echo $flag
 before_deploy:
 - "./deploy.sh arm"
@@ -45,7 +48,8 @@ before_deploy:
 - tag1="latest"
 - tag2=$timetag
 - echo $tag2
-- create_manifest treehouses/apache $tag1 $tag2 treehouses/apache-tags:amd64 treehouses/apache-tags:arm treehouses/apache-tags:arm64
+- create_manifest treehouses/apache $tag1 $tag2 treehouses/apache-tags:amd64 treehouses/apache-tags:arm
+  treehouses/apache-tags:arm64
 - docker manifest inspect treehouses/apache:$tag1
 - docker manifest inspect treehouses/apache:$tag2
 deploy:
@@ -57,4 +61,4 @@ deploy:
     condition: "$flag = true"
 env:
   global:
-  - secure: INhtJAsjlI8wD0rAv1iwe+qspTv+QZoSmMJwpdItf7Xg64g/u+P7wTcH5KS2IK4G3gyd4aJf6l9Blqp7simLu2yWWIK80ZYe+TAwmCvvuroynYve1eMzziaaly/A9cxVfgtaZADvCT/DRFhWLKwqfVFIppGpJwliWo3KJntIuvTGlUzj2KGS6vPmiPLy2emcgooluS8Xi8PN7oLlsJtzSl/nr5g4ZONoEQF1pCIhWO96oNAWIRu5WjzcLAaF3f7EeX3pxD6B2b5ElQiDJQVEfXy977nNeK1vFeaqueGkgVy80cJlPYhh0JrdyhXUAma5Qhm1gXDBkRL5mdqO2YA7jhrlJVPMH5VT7BwTL1zkDoLXahllmgkUIpPRg+zj8VCmcUMZSBXeuwNWYMFO+mszIsw89WnEK78LyBnQuwtrZcHlSIM7yn+hc+1IdqQ9ijDe6z7mim/tZLQ10lHivhS67OU/Oo3dGLIsHxB21zwjyeTRZUi4DgCTnMdNrl4mV56YloTCuwJTTw8pqj/8Vo386pyHUPvYbs6UbvnSVYzwDaLQldbDIfsRI7dp2VvSqoPuzsAXblkw8Dz4wn/sTVyQB8JUziSj+Nwv4046GEy31dVjQ1/mo3kGTE2WnINa7RscxJicIFV4pmdWhwHvteMC4jwevTUbrIaW916ZBJfdxZE=
+    - secure: ho/V9sBvcRIjMBzN/FMJDuCFvfZ1z2tUD7INjOzOfizXOK152Mtog64mDaToXAyuXT7GdXP/oz7Rf73jFurE5Xt46EKT7/HluGWvAgYyn9QqvzX1hdM5urMmO/vesfOb/BivbaJatazoNC7AayRiqecG+sMDr2nsgoAlZ1SXjum82x8J0yC1YGhPhHcx/A+KBIuUs/RQDc7iiTCrZuQ65oOXqeKI6TP5N4Qhp6gMJRA5DDoGU0jjwOK3UvCp0zUU29RVjnlldePks/Dl2dATXyTPR+bvZuS8lFy1S8rtLcjdE7wqF1JWv1nmijULGGv68q5yeWO68vELQT6BC/ziYUF/6xQ1VTVloMgaiuzjQKrpd5T2gMhALsSZpZgegg+/zl8RBFyg5hyPV8NH9GmkD3dhDPnR2r4oVaURur2Vmj+aD4hjm3WNhtxNQJ4vJTasTU1A3KWymenfNG0voV3okJe/GsPnx7OYI1R0Cgn6mgV60CHwofYQdtMBkuF9WiYNhqvoUZnJytW2/MbJNLV8Ff7pmuvAz8EJtFhEnfyEr9kpHY/9cxL7NtJJLwrtFToX9wcBpLpbyGRiMpJWecFG42G6EJ/0M5hk8pZzescLM++JCksIMvJncpqLptD6ihi/ff9tPCipGiCAJEfuutMYzEHR5arWKoDmh9W9IF/ylgc=
