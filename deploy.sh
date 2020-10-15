@@ -1,5 +1,7 @@
 #!/bin/bash
 
+
+
 arch=$1  # arm arm64 amd64
 tag_arch=treehouses/apache-tags:$arch
 tag_time=$(date +%Y%m%d%H%M)
