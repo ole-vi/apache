@@ -36,9 +36,9 @@ script:
 - echo $flag
 #- flag=false
 before_deploy:
-- deploy_image "treehouses:apache" arm
-- deploy_image "treehouses:apache" amd64
-- deploy_image "treehouses:apache" arm64
+- deploy_image "treehouses/apache" arm
+- deploy_image "treehouses/apache" amd64
+- deploy_image "treehouses/apache" arm64
 - timetag=$(date +%Y%m%d%H%M)
 - echo $timetag
 - tag1="latest"
