@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - main
+      - github-actions
   workflow_dispatch:
   repository_dispatch:
     types: apache
@@ -20,7 +21,7 @@ jobs:
       - name: treehouses apache
         run: |
           export DOCKER_CLI_EXPERIMENTAL=enabled
-          repo="treehouses/apache"
+          repo="dyeh123/apache"
           source .github/workflows/utils.sh
           echo "amd64"
           debian_x86_sha=$(get_variant_sha "debian" "latest" "amd64")
