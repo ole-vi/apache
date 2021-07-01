@@ -5,7 +5,6 @@ on:
     branches:
       - master
       - main
-      - github-actions
   workflow_dispatch:
   repository_dispatch:
     types: apache
@@ -21,7 +20,7 @@ jobs:
       - name: treehouses apache
         run: |
           export DOCKER_CLI_EXPERIMENTAL=enabled
-          repo="dyeh123/apache"
+          repo="treehouses/apache"
           source .github/workflows/utils.sh
           echo "amd64"
           debian_x86_sha=$(get_variant_sha "debian" "latest" "amd64")
@@ -38,14 +37,14 @@ jobs:
           echo $debian_arm64_sha
           variant_apache_arm64_sha=$(get_manifest_sha "$repo:latest" "arm64")
           echo $variant_apache_arm64_sha
-          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-          build_image "treehouses/debian:latest" amd64 $repo
-          build_image "treehouses/debian:latest" arm $repo
-          build_image "treehouses/debian:latest" arm64 $repo
           echo "change"
           flag=$(compare_sha  "$debian_x86_sha" "$variant_apache_x86_sha" "$balena_rpi_sha" "$variant_rpi_sha" "$debian_arm64_sha" "$variant_apache_arm64_sha")
           echo $flag
           if [[ $flag == true ]]; then
+            docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+            build_image "treehouses/debian:latest" amd64 $repo
+            build_image "treehouses/debian:latest" arm $repo
+            build_image "treehouses/debian:latest" arm64 $repo
             deploy_image $repo arm
             deploy_image $repo amd64
             deploy_image $repo arm64
